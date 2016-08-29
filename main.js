@@ -17,6 +17,7 @@ function Game()
 	// Stores current timeout function
 	var currTimeOut;
 	this.spacePressed = false;
+	var score = 0;
 
 	// Contains square positions for every figure
 	var figures = [ [[4,0],[5,0],[4,-1],[5,-1]],
@@ -30,6 +31,7 @@ function Game()
 	var choice = 0;
 	// Contains the state number for the current figure
 	var state = 0;
+	$("#score").text("Score: 0");
 
 	// Coordinates of every square on the map
 	this.coordinates = [];
@@ -117,6 +119,10 @@ function Game()
 			}
 			if (fullLine)
 			{
+				// Updating current score
+				score += 10;
+				$("#score").text("Score: " + score);
+				
 				for (let z = this.coordinates.length - 1; z >= 0; z--)
 				{
 					// j contains the number of the line we are clearing
