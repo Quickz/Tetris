@@ -24,6 +24,9 @@ function Game()
 	[[4,0],[5,0],[3,0],[6,0]], [[5,0],[6,0],[5,-1],[4,0]], 
 	[[4,0],[5,0],[5,-1],[6,-1]], [[5,0],[6,0],[4,-1],[5,-1]],
 	[[5,0],[6,0],[4,-1],[4,0]], [[5,0],[6,0],[6,-1],[4,0]] ];
+	// Contains figure colors
+	var colors = ["#2E9E11", "#008ae6", "#3385ff", "orange", "#ff4000", "#ff0080", "#b35900", "white"];
+
 	// Contains upcoming choices
 	var choices = [Math.floor(Math.random() * 7), Math.floor(Math.random() * 7), 
 	Math.floor(Math.random() * 7), Math.floor(Math.random() * 7)];
@@ -39,7 +42,7 @@ function Game()
 	{
 		this.coordinates.push([]);
 		for (let j = 0; j < 20; j++)
-			this.coordinates[i].push(0);
+			this.coordinates[i].push(7);
 	}
 
 	// Redraw the current situation
@@ -49,11 +52,12 @@ function Game()
 		{
 			for (let j = 0; j < 20; j++)
 			{
-				map.fillStyle = this.coordinates[i][j] == 1 ? "green" : "white";
+				map.fillStyle = colors[this.coordinates[i][j]];
 				map.fillRect(i * 17 + 1,j * 17 + 1,16,16);
 			}
 		}
 	};
+	// 0-6 squares, 7 empty square(white), 8 shadow
 	this.setCoordinates = function(coord, color)
 	{
 		for (let i = 0; i < 4; i++)
@@ -65,7 +69,7 @@ function Game()
 		// checking if coordinate goes outside boundaries
 		if (x < 0 || x > 9 || y > 19) return true;
 		// checking for any squares
-		if (this.coordinates[x][y] == 1)
+		if (this.coordinates[x][y] < 7)
 		{
 			// Making sure the coordinate doesn't belong to the current figure itself
 			if (!currCoord.some(curr => x == curr[0] && y == curr[1]))
@@ -90,11 +94,11 @@ function Game()
 			}
 		}
 		// Emptying old squares
-		this.setCoordinates(currCoord, 0);
+		this.setCoordinates(currCoord, 7);
 		for (let i = 0; i < currCoord.length; i++)
 			currCoord[i][1]++;
 
-		this.setCoordinates(currCoord, 1);
+		this.setCoordinates(currCoord, choice);
 		this.draw();
 		// Storing the function in a variable with argument currCoord
 		var tmp = this.move.bind(this);
@@ -111,7 +115,7 @@ function Game()
 			let fullLine = true;
 			for (let i = 0; i < this.coordinates.length; i++)
 			{
-				if (this.coordinates[i][j] == 0)
+				if (this.coordinates[i][j] == 7)
 				{
 					fullLine = false;
 					break;
@@ -151,7 +155,7 @@ function Game()
 			ctx[i] = ctx[i].getContext("2d");
 
 			ctx[i].clearRect(0,0,85,85);
-			ctx[i].fillStyle = "green";
+			ctx[i].fillStyle = colors[choices[i]];
 			ctx[i].fillText(choices[i], 15, 15);
 
 			drawDisplay(choices[i], i);
@@ -182,7 +186,7 @@ function Game()
 		for (let i = 0; i < figures[choice].length; i++)
 			currCoord[i] = figures[choice][i].slice(0, 2);
 
-		this.setCoordinates(currCoord, 1);
+		this.setCoordinates(currCoord, choice);
 		this.draw();
 		// Storing the function in a variable with argument currCoord
 		var tmp = this.move.bind(this);
@@ -198,11 +202,11 @@ function Game()
 			if (currCoord[i][0] > 8 || this.checkCoordinates(currCoord[i][0] + 1, currCoord[i][1]))
 				return;
 		}
-		this.setCoordinates(currCoord, 0);
+		this.setCoordinates(currCoord, 7);
 		// Moving the figure
 		for (let i = 0; i < 4; i++)
 			currCoord[i][0]++;
-		this.setCoordinates(currCoord, 1);
+		this.setCoordinates(currCoord, choice);
 		this.draw();
 	};
 	this.moveLeft = function()
@@ -212,11 +216,11 @@ function Game()
 			if (currCoord[i][0] < 1 || this.checkCoordinates(currCoord[i][0] - 1, currCoord[i][1]))
 				return;
 		}
-		this.setCoordinates(currCoord, 0);
+		this.setCoordinates(currCoord, 7);
 		// Moving the figure
 		for (let i = 0; i < 4; i++)
 			currCoord[i][0]--;
-		this.setCoordinates(currCoord, 1);
+		this.setCoordinates(currCoord, choice);
 		this.draw();
 	};
 	// Rotates the current figure
@@ -293,12 +297,12 @@ function Game()
 		}
 		function turnFig(arr, that)
 		{
-			that.setCoordinates(currCoord, 0);
+			that.setCoordinates(currCoord, 7);
 
 			changeCoord(arr);
 			state += state == 3 ? -3 : 1;
 
-			that.setCoordinates(currCoord, 1);
+			that.setCoordinates(currCoord, choice);
 			that.draw();
 		}
 	};
@@ -381,47 +385,5 @@ document.onkeydown = anim;
 
 
 
-//TODO - read about negative indexes
 
-
-
-
-
-//---------TEST----------
-/*
-var ctner = document.getElementById("test");
-var ctx = ctner.getContext("2d");
-ctx.fillStyle = "green";
-//ctx.scale(3, 1);
-ctx.fillRect(1,1,16,16);
-*/
-
-
-
-/*function Person()
-{
-	this.sayHello = function()
-	{
-		alert("Hello!");
-	};
-}
-function Chef()
-{
-	Person.call(this);
-	this.cook = function()
-	{
-		alert("Cabbage");
-	}
-}
-Chef.prototype = Object.create(Person.prototype);
-
-var Michael = new Chef();*/
-//Michael.sayHello();
-//Michael.cook();
-
-//alert("Asd");
-
-//apple.method1();
-//apple.method2();
-//alert("done");
 })(jQuery);
