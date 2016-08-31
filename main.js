@@ -21,10 +21,10 @@ function Game()
 	var score = 0;
 
 	// Contains square positions for every figure
-	var figures = [ [[4,0],[5,0],[4,-1],[5,-1]],
-	[[4,0],[5,0],[3,0],[6,0]], [[5,0],[6,0],[5,-1],[4,0]], 
-	[[4,0],[5,0],[5,-1],[6,-1]], [[5,0],[6,0],[4,-1],[5,-1]],
-	[[5,0],[6,0],[4,-1],[4,0]], [[5,0],[6,0],[6,-1],[4,0]] ];
+	var figures = [ [[4,-1],[5,-1],[4,-2],[5,-2]],
+	[[4,-1],[5,-1],[3,-1],[6,-1]], [[5,-1],[6,-1],[5,-2],[4,-1]], 
+	[[4,-1],[5,-1],[5,-2],[6,-2]], [[5,-1],[6,-1],[4,-2],[5,-2]],
+	[[5,-1],[6,-1],[4,-2],[4,-1]], [[5,-1],[6,-1],[6,-2],[4,-1]] ];
 	// Contains figure colors
 	var colors = ["#2E9E11", "#008ae6", "#3385ff", "orange", "#ff4000", "#ff0080", "#b35900", "white"];
 
@@ -174,10 +174,10 @@ function Game()
 
 		function drawDisplay(n, x)
 		{
-			ctx[x].fillRect(9 + 17 * (figures[n][0][0] - 3),54 + 17 * figures[n][0][1],16,16);
-			ctx[x].fillRect(9 + 17 * (figures[n][1][0] - 3),54 + 17 * figures[n][1][1],16,16);
-			ctx[x].fillRect(9 + 17 * (figures[n][2][0] - 3),54 + 17 * figures[n][2][1],16,16);
-			ctx[x].fillRect(9 + 17 * (figures[n][3][0] - 3),54 + 17 * figures[n][3][1],16,16);
+			ctx[x].fillRect(9 + 17 * (figures[n][0][0] - 3),54 + 17 * (figures[n][0][1] + 1),16,16);
+			ctx[x].fillRect(9 + 17 * (figures[n][1][0] - 3),54 + 17 * (figures[n][1][1] + 1),16,16);
+			ctx[x].fillRect(9 + 17 * (figures[n][2][0] - 3),54 + 17 * (figures[n][2][1] + 1),16,16);
+			ctx[x].fillRect(9 + 17 * (figures[n][3][0] - 3),54 + 17 * (figures[n][3][1] + 1),16,16);
 		}
 	}
 	this.genFigure = function()
@@ -201,10 +201,7 @@ function Game()
 		this.draw();
 		// Storing the function in a variable with argument currCoord
 		var tmp = this.move.bind(this);
-		if (this.spacePressed)
-			tmp();
-		else
-			currTimeOut = setTimeout(tmp, gameSpeed);
+		tmp();
 	};
 	this.moveRight = function()
 	{
