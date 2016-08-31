@@ -9,6 +9,7 @@ x - future space
 var map = $("#map")[0].getContext("2d");
 //var ctx = mainWindow.getContext("2d");
 var gameSpeed = 300;
+var gameover = false;
 
 function Game()
 {
@@ -87,6 +88,15 @@ function Game()
 			{
 				// Stopping the movement and creating a new figure
 				this.spacePressed = false;
+
+				// Checking if game's over
+				if (currCoord.some(x => x[1] < 0))
+				{
+					gameover = true;
+					alert("Game Over!");
+					return;
+				}
+
 				// Also cleaning any lines that need to be cleaned
 				this.cleanLines();
 				this.genFigure();
@@ -338,32 +348,40 @@ function anim(e)
 		// R - restarts the game
 		case 82:
 			game = game.restart();
+			gameover = false;
 			break;
 		// Up
 		case 38:
 			e.preventDefault();
-			game.turnFigure();
+			if (!gameover)
+				game.turnFigure();
 			break;
 		// Down
 		case 40:
 			e.preventDefault();
-			game.speedUp();
+			if (!gameover)
+				game.speedUp();
 			break;
 		// Left
 		case 37:
 			e.preventDefault();
-			game.moveLeft();
+			if (!gameover)
+				game.moveLeft();
 			break;
 		// Right
 		case 39:
 			e.preventDefault();
-			game.moveRight();
+			if (!gameover)
+				game.moveRight();
 			break;
 		// Space
 		case 32:
 			e.preventDefault();
-			game.spacePressed = true;
-			game.speedUp();
+			if (!gameover)
+			{
+				game.spacePressed = true;
+				game.speedUp();
+			}
 			break;
 	}
 }
