@@ -174,10 +174,8 @@ function Game()
 
 		function drawDisplay(n, x)
 		{
-			ctx[x].fillRect(9 + 17 * (figures[n][0][0] - 3),54 + 17 * (figures[n][0][1] + 1),16,16);
-			ctx[x].fillRect(9 + 17 * (figures[n][1][0] - 3),54 + 17 * (figures[n][1][1] + 1),16,16);
-			ctx[x].fillRect(9 + 17 * (figures[n][2][0] - 3),54 + 17 * (figures[n][2][1] + 1),16,16);
-			ctx[x].fillRect(9 + 17 * (figures[n][3][0] - 3),54 + 17 * (figures[n][3][1] + 1),16,16);
+			for (let i = 0; i < 4; i++)
+				ctx[x].fillRect(9 + 17 * (figures[n][i][0] - 3),54 + 17 * (figures[n][i][1] + 1),16,16);
 		}
 	}
 	this.genFigure = function()
