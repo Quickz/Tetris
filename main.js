@@ -15,6 +15,8 @@ function Game()
 {
 	// Coordinates of current figure squares
 	var currCoord = [];
+	// Coordinates of current figure shadow squares
+	var currShadow = [[], [], [], []];
 	// Stores current timeout function
 	var currTimeOut;
 	this.spacePressed = false;
@@ -26,7 +28,7 @@ function Game()
 	[[4,-1],[5,-1],[5,-2],[6,-2]], [[5,-1],[6,-1],[4,-2],[5,-2]],
 	[[5,-1],[6,-1],[4,-2],[4,-1]], [[5,-1],[6,-1],[6,-2],[4,-1]] ];
 	// Contains figure colors
-	var colors = ["#2E9E11", "#008ae6", "#3385ff", "orange", "#ff4000", "#ff0080", "#b35900", "white"];
+	var colors = ["#2E9E11", "#008ae6", "#3385ff", "orange", "#ff4000", "#ff0080", "#b35900", "white", "gray"];
 
 	// Contains upcoming choices
 	var choices = [Math.floor(Math.random() * 7), Math.floor(Math.random() * 7), 
@@ -195,7 +197,9 @@ function Game()
 		for (let i = 0; i < figures[choice].length; i++)
 			currCoord[i] = figures[choice][i].slice(0, 2);
 
+		this.setShadow();
 		this.setCoordinates(currCoord, choice);
+
 		this.draw();
 		// Storing the function in a variable with argument currCoord
 		var tmp = this.move.bind(this);
@@ -212,7 +216,10 @@ function Game()
 		// Moving the figure
 		for (let i = 0; i < 4; i++)
 			currCoord[i][0]++;
+
+		this.setShadow();
 		this.setCoordinates(currCoord, choice);
+
 		this.draw();
 	};
 	this.moveLeft = function()
@@ -226,12 +233,16 @@ function Game()
 		// Moving the figure
 		for (let i = 0; i < 4; i++)
 			currCoord[i][0]--;
+
+		this.setShadow();
 		this.setCoordinates(currCoord, choice);
+
 		this.draw();
 	};
 	// Rotates the current figure
 	this.turnFigure = function()
 	{
+		// Finding our figure
 		switch(choice)
 		{
 			// Pole ----
@@ -268,6 +279,7 @@ function Game()
 				return;
 		}
 
+		// Doing the turn
 		if (this.checkAllCoord(changes[state]))
 		  	turnFig(changes[state], this);
 		else
@@ -308,7 +320,9 @@ function Game()
 			changeCoord(arr);
 			state += state == 3 ? -3 : 1;
 
+			that.setShadow();
 			that.setCoordinates(currCoord, choice);
+			
 			that.draw();
 		}
 	};
@@ -324,6 +338,29 @@ function Game()
 			j += 2;
 		}
 		return true;
+	};
+	this.setShadow = function()
+	{
+		for (let i = 0; i < currCoord.length; i++)
+		{
+			// Cleaning old shadow
+			if (typeof currShadow[i][0] !== "undefined" && this.coordinates[currShadow[i][0]][currShadow[i][1]] == 8)
+				this.coordinates[currShadow[i][0]][currShadow[i][1]] = 7;
+			// Copying current figure coordinates contains
+			currShadow[i][0] = currCoord[i][0];
+			currShadow[i][1] = currCoord[i][1];
+		}
+
+		// Moving shadow until to the very bottom like a figure
+		// checking if it's NOT a square because other then 7,8 there can be undefined
+		// ones outside the map
+		while (currShadow.every(x => x[1] < 19 && !(this.coordinates[x[0]][x[1] + 1] < 7)))
+		{
+			for (let j = 0; j < currShadow.length; j++)
+				currShadow[j][1]++;
+		}
+
+		this.setCoordinates(currShadow, 8);
 	};
 	// Stops the game and returns a new one
 	this.restart = function()
