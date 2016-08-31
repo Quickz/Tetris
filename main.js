@@ -140,10 +140,11 @@ function Game()
 				for (let z = this.coordinates.length - 1; z >= 0; z--)
 				{
 					// j contains the number of the line we are clearing
+					// 0. line becomes 1. and 1. becomes 2. and so on
 					for (let n = j; n > 0; n--)
-					{
 						this.coordinates[z][n] = this.coordinates[z][n - 1];
-					}
+					// Last line instead gets set to an empty one
+					this.coordinates[z][0] = 7;
 				}
 
 			}
