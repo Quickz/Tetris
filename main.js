@@ -33,6 +33,10 @@ function Game()
 	// Contains figure colors
 	var colors = ["#2E9E11", "#008ae6", "#3385ff", "orange", "#ff4000", "#ff0080", "#b35900", "white", "gray"];
 
+	// Canba objects for the next up figures
+	var nextUps = [ $("#next3")[0], $("#next2")[0], $("#next1")[0] ];
+	nextUps = nextUps.map(x => x.getContext("2d"));
+
 	// Contains upcoming choices
 	var choices = [Math.floor(Math.random() * 7), Math.floor(Math.random() * 7), 
 	Math.floor(Math.random() * 7), Math.floor(Math.random() * 7)];
@@ -168,36 +172,30 @@ function Game()
 	// Updates next shown figure
 	this.upNext = function()
 	{
-		var ctx = [ $("#next3")[0], $("#next2")[0], $("#next1")[0] ];
-
-		for (let i = 0; i < ctx.length; i++)
+		for (let i = 0; i < nextUps.length; i++)
 		{
-			ctx[i] = ctx[i].getContext("2d");
+			nextUps[i].clearRect(0,0,85,85);
+			nextUps[i].fillStyle = colors[choices[i + 1]];
+			nextUps[i].fillText(choices[i + 1], 15, 15);
 
-			ctx[i].clearRect(0,0,85,85);
-			ctx[i].fillStyle = colors[choices[i]];
-			ctx[i].fillText(choices[i], 15, 15);
-
-			drawDisplay(choices[i], i);
+			drawDisplay(choices[i + 1], i);
 		}
 
 		function drawDisplay(n, x)
 		{
 			for (let i = 0; i < 4; i++)
-				ctx[x].fillRect(9 + 17 * (figures[n][i][0] - 3),54 + 17 * (figures[n][i][1] + 1),16,16);
+				nextUps[x].fillRect(9 + 17 * (figures[n][i][0] - 3),54 + 17 * (figures[n][i][1] + 1),16,16);
 		}
-	}
+	};
 	this.genFigure = function()
 	{
 		// Reseting state for the new figure
 		state = 0;
 
-
-		this.upNext();
 		// Randomly choosing a figure from the array
-		choice = choices.pop();//Math.floor(Math.random() * 7);
+		choice = choices.pop();
 		choices.unshift(Math.floor(Math.random() * 7));
-		
+		this.upNext();
 
 		// Assigning coordinates of the new figure
 		// This must be done in this way to avoid passing a reference instead of the actual array contents
@@ -380,6 +378,8 @@ function Game()
 			map.clearRect(0,0,170,340);
 			// Redraws the game map contents
 			this.draw();
+			// Redisplays hidden upcoming figures
+			this.upNext();
 		}
 		else
 		{
@@ -391,6 +391,8 @@ function Game()
 			// Drawing text
 			map.fillStyle = "black";
 			map.fillText("Game Paused!",18,170);
+			// Hides upcoming figures
+			nextUps.forEach(x => x.clearRect(0,0,85,85));
 		}
 	};
 
