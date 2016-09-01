@@ -7,12 +7,15 @@ x - future space
 */
 
 var map = $("#map")[0].getContext("2d");
+// setting font for pause/game over text
+map.font = "23px Calibri";
 //var ctx = mainWindow.getContext("2d");
 var gameSpeed = 300;
 var gameover = false;
 
 function Game()
 {
+	this.paused = false;
 	// Coordinates of current figure squares
 	var currCoord = [];
 	// Coordinates of current figure shadow squares
@@ -117,7 +120,7 @@ function Game()
 		if (this.spacePressed)
 			tmp();
 		else
-			currTimeOut = setTimeout(tmp, gameSpeed);
+			currTimeOut = new Timer(tmp, gameSpeed);
 	};
 	// Checks and cleans appropriate lines
 	this.cleanLines = function()
@@ -155,7 +158,7 @@ function Game()
 	// Used for the down key - skips the timeout
 	this.speedUp = function()
 	{
-		clearTimeout(currTimeOut);
+		currTimeOut.pause();
 		this.move();
 	};
 	// Updates next shown figure
@@ -362,15 +365,62 @@ function Game()
 
 		this.setCoordinates(currShadow, 8);
 	};
+	this.pause = function()
+	{
+		if (this.paused)
+		{
+			this.paused = false;
+			currTimeOut.resume();
+
+			// Clears the game map from its contents
+			map.clearRect(0,0,170,340);
+			// Redraws the game map contents
+			this.draw();
+		}
+		else
+		{
+			this.paused = true;
+			currTimeOut.pause();
+
+			// Clears the game map from its contents
+			map.clearRect(0,0,170,340);
+			// Drawing text
+			map.fillStyle = "black";
+			map.fillText("Game Paused!",18,170);
+		}
+	};
+
 	// Stops the game and returns a new one
 	this.restart = function()
 	{
-		clearTimeout(currTimeOut);
+		currTimeOut.pause();
 		return new Game();
 	};
 	// Creating a new figure
 	this.genFigure();
 }
+
+// basically setTimeout with pause and resume option
+function Timer(callback, delay)
+{
+    var timerId, start, remainder = delay;
+
+    this.pause = function()
+    {
+        clearTimeout(timerId);
+        remainder -= new Date() - start;
+    };
+
+    this.resume = function()
+    {
+        start = new Date();
+        clearTimeout(timerId);
+        timerId = setTimeout(callback, remainder);
+    };
+
+    this.resume();
+}
+
 // Controls
 function anim(e)
 {
@@ -386,34 +436,41 @@ function anim(e)
 		// Up
 		case 38:
 			e.preventDefault();
-			if (!gameover)
+			if (!gameover && !game.paused)
 				game.turnFigure();
 			break;
 		// Down
 		case 40:
 			e.preventDefault();
-			if (!gameover)
+			if (!gameover && !game.paused)
 				game.speedUp();
 			break;
 		// Left
 		case 37:
 			e.preventDefault();
-			if (!gameover)
+			if (!gameover && !game.paused)
 				game.moveLeft();
 			break;
 		// Right
 		case 39:
 			e.preventDefault();
-			if (!gameover)
+			if (!gameover && !game.paused)
 				game.moveRight();
 			break;
 		// Space
 		case 32:
 			e.preventDefault();
-			if (!gameover)
+			if (!gameover && !game.paused)
 			{
 				game.spacePressed = true;
 				game.speedUp();
+			}
+			break;
+		// p - pause
+		case 80:
+			if (!gameover)
+			{
+				game.pause();
 			}
 			break;
 	}
@@ -421,12 +478,6 @@ function anim(e)
 
 
 var game = new Game();
-//game = undefined;
-//console.log(game);
-//game.figure();
-
-//map.fillStyle = "green";
-//map.fillRect(18,18,16,16);map.fillRect(35,35,16,16);
 
 document.onkeydown = anim;
 
