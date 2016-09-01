@@ -98,7 +98,11 @@ function Game()
 				if (currCoord.some(x => x[1] < 0))
 				{
 					gameover = true;
-					alert("Game Over!");
+					
+					// Drawing text
+					map.fillStyle = "black";
+					map.fillText("Game Over!",30,170);
+
 					return;
 				}
 
@@ -394,6 +398,10 @@ function Game()
 	this.restart = function()
 	{
 		currTimeOut.pause();
+		
+		// Clears the game map from its contents
+		map.clearRect(0,0,170,340);
+
 		return new Game();
 	};
 	// Creating a new figure
