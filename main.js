@@ -176,7 +176,7 @@ function Game()
 		{
 			nextUps[i].clearRect(0,0,85,85);
 			nextUps[i].fillStyle = colors[choices[i + 1]];
-			nextUps[i].fillText(choices[i + 1], 15, 15);
+			nextUps[i].fillText(nextUps.length - i + ".", 15, 15);
 
 			drawDisplay(choices[i + 1], i);
 		}

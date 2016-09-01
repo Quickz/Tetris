@@ -33,17 +33,16 @@
 	right: 17px;
 	border: solid #e3e3e3 1px;
 }
-#next-txt, #saved-txt {
+#next-txt {
 	display: block;
+	font-family: calibri;
 	margin-left: 19px;
 }
-#next1, #next2, #next3, #saved {
+#next1, #next2, #next3 {
 	position: relative;
 	border: solid #e3e3e3 1px;
 	margin: 0px 19px 0px 19px;
 }
 #next {
 
-}
-#saved {
 }
