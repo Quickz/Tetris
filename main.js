@@ -26,6 +26,10 @@ function Game()
 	var currTimeOut;
 	// Stores current speed timeout function
 	var speedTimeout;
+	// Stores current timeout for our timer
+	var timerTimeout;
+	// Game timer contents
+	var time = {"hours": 0, "minutes": 0, "seconds": -1};
 
 	this.spacePressed = false;
 	var score = 0;
@@ -379,6 +383,7 @@ function Game()
 			this.paused = false;
 			currTimeOut.resume();
 			speedTimeout.resume();
+			timerTimeout.resume();
 
 			// Clears the game map from its contents
 			map.clearRect(0,0,170,340);
@@ -392,6 +397,7 @@ function Game()
 			this.paused = true;
 			currTimeOut.pause();
 			speedTimeout.pause();
+			timerTimeout.pause();
 
 			// Clears the game map from its contents
 			map.clearRect(0,0,170,340);
@@ -419,12 +425,44 @@ function Game()
 		
 		var tmp = this.updateSpeed.bind(this);
 		speedTimeout = new Timer(tmp, 6000);
-	}
+	};
+	// Game timer
+	this.updateTime = function()
+	{
+		if (this.over)
+			return
+
+		time.seconds++;
+
+		if (time.seconds > 59)
+		{
+			time.seconds = 0;
+			time.minutes++;
+		}
+		if (time.minutes > 59)
+		{
+			time.minutes = 0;
+			time.hours++;
+		}
+		if (time.hours > 99)
+		{
+			$("#time").text("Time: Too High!")
+			return;
+		}
+
+		$("#time").text("Time: " + (time.hours < 10 ? "0" : "") + time.hours
+						   + ":" + (time.minutes < 10 ? "0" : "") + time.minutes
+						   + ":" + (time.seconds < 10 ? "0" : "") + time.seconds);
+
+		var tmp = this.updateTime.bind(this);
+		timerTimeout = new Timer(tmp, 1000);
+	};
 	// Stops the game and returns a new one
 	this.restart = function()
 	{
 		currTimeOut.pause();
 		speedTimeout.pause();
+		timerTimeout.pause();
 
 		// Clears the game map from its contents
 		map.clearRect(0,0,170,340);
@@ -435,6 +473,8 @@ function Game()
 	this.genFigure();
 	// Starting the progressive speedIncrease
 	this.updateSpeed();
+	// Starts our game timer
+	this.updateTime();
 }
 // basically setTimeout with pause and resume option
 function Timer(callback, delay)
