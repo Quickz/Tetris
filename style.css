@@ -12,17 +12,26 @@
 	border-bottom: solid #e6e6e6 1px;
 
 	position: relative;
-	margin: auto;
+	margin: 15px auto auto auto;
 
 	background-size: 17px 17px;
     background-image: linear-gradient(to right, #e6e6e6 1px, transparent 1px), linear-gradient(to bottom, #e6e6e6 1px, transparent 1px);
 
 }
-#score {
+#left-ui {
 	float: left;
-	margin: 0px 0px 0px 25px;
+	width: 135px;
+	border: solid #e3e3e3 1px;
+	margin: 7px 0px 0px 7px;
+	padding: 4px 0px 4px 0px;
+}
+#score, #speed {
+	margin: 0px 0px 0px 10px;
 	font-family: calibri;
-	font-size: 20px;
+	font-size: 17px;
+}
+#speed {
+	
 }
 #right-ui {
 	position: relative;
@@ -42,7 +51,4 @@
 	position: relative;
 	border: solid #e3e3e3 1px;
 	margin: 0px 19px 0px 19px;
-}
-#next {
-
 }

@@ -10,11 +10,13 @@ var map = $("#map")[0].getContext("2d");
 // setting font for pause/game over text
 map.font = "23px Calibri";
 //var ctx = mainWindow.getContext("2d");
-var gameSpeed = 300;
-var gameover = false;
 
 function Game()
 {
+	var startSpeed = 750;
+	var gameSpeed = startSpeed + 7.5;
+	this.over = false;
+
 	this.paused = false;
 	// Coordinates of current figure squares
 	var currCoord = [];
@@ -22,6 +24,9 @@ function Game()
 	var currShadow = [[], [], [], []];
 	// Stores current timeout function
 	var currTimeOut;
+	// Stores current speed timeout function
+	var speedTimeout;
+
 	this.spacePressed = false;
 	var score = 0;
 
@@ -101,7 +106,7 @@ function Game()
 				// Checking if game's over
 				if (currCoord.some(x => x[1] < 0))
 				{
-					gameover = true;
+					this.over = true;
 					
 					// Drawing text
 					map.fillStyle = "black";
@@ -373,6 +378,7 @@ function Game()
 		{
 			this.paused = false;
 			currTimeOut.resume();
+			speedTimeout.resume();
 
 			// Clears the game map from its contents
 			map.clearRect(0,0,170,340);
@@ -385,6 +391,7 @@ function Game()
 		{
 			this.paused = true;
 			currTimeOut.pause();
+			speedTimeout.pause();
 
 			// Clears the game map from its contents
 			map.clearRect(0,0,170,340);
@@ -395,12 +402,30 @@ function Game()
 			nextUps.forEach(x => x.clearRect(0,0,85,85));
 		}
 	};
-
+	// Increases the current speed of the game
+	this.updateSpeed = function()
+	{
+		if (this.over)
+			return;
+		if (Math.floor(gameSpeed) <= 150)
+		{
+			gameSpeed = 150;
+			$("#speed").text("Speed: " + Math.round(startSpeed / gameSpeed  * 100) + "%");
+			return;
+		}
+		// Increases the current speed by 1 percent
+		gameSpeed -= gameSpeed * 0.01;
+		$("#speed").text("Speed: " + Math.round(startSpeed / gameSpeed  * 100) + "%");
+		
+		var tmp = this.updateSpeed.bind(this);
+		speedTimeout = new Timer(tmp, 6000);
+	}
 	// Stops the game and returns a new one
 	this.restart = function()
 	{
 		currTimeOut.pause();
-		
+		speedTimeout.pause();
+
 		// Clears the game map from its contents
 		map.clearRect(0,0,170,340);
 
@@ -408,8 +433,9 @@ function Game()
 	};
 	// Creating a new figure
 	this.genFigure();
+	// Starting the progressive speedIncrease
+	this.updateSpeed();
 }
-
 // basically setTimeout with pause and resume option
 function Timer(callback, delay)
 {
@@ -441,36 +467,35 @@ function anim(e)
 		// R - restarts the game
 		case 82:
 			game = game.restart();
-			gameover = false;
 			break;
 		// Up
 		case 38:
 			e.preventDefault();
-			if (!gameover && !game.paused)
+			if (!game.over && !game.paused)
 				game.turnFigure();
 			break;
 		// Down
 		case 40:
 			e.preventDefault();
-			if (!gameover && !game.paused)
+			if (!game.over && !game.paused)
 				game.speedUp();
 			break;
 		// Left
 		case 37:
 			e.preventDefault();
-			if (!gameover && !game.paused)
+			if (!game.over && !game.paused)
 				game.moveLeft();
 			break;
 		// Right
 		case 39:
 			e.preventDefault();
-			if (!gameover && !game.paused)
+			if (!game.over && !game.paused)
 				game.moveRight();
 			break;
 		// Space
 		case 32:
 			e.preventDefault();
-			if (!gameover && !game.paused)
+			if (!game.over && !game.paused)
 			{
 				game.spacePressed = true;
 				game.speedUp();
@@ -478,7 +503,7 @@ function anim(e)
 			break;
 		// p - pause
 		case 80:
-			if (!gameover)
+			if (!game.over)
 			{
 				game.pause();
 			}
