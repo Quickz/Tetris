@@ -590,6 +590,7 @@ $("#map").mouseup(function(e) {
 		if (menu.isInPos(tmp,45,125,98,138))
 		{
 			menu = undefined;
+			$("#title").hide();
 			game = new Game();
 		}
 	}
@@ -636,6 +637,7 @@ function anim(e)
 				if (menu.active == "start")
 				{
 					menu = undefined;
+					$("#title").hide();
 					game = new Game();
 				}
 				break;

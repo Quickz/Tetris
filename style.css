@@ -1,3 +1,5 @@
+@import "https://fonts.googleapis.com/css?family=Press+Start+2P";
+
 #container {
 	margin: auto;
 	width: 500px;
@@ -51,4 +53,11 @@
 	position: relative;
 	border: solid #e3e3e3 1px;
 	margin: 0px 19px 0px 19px;
+}
+#title {
+	position: absolute;
+	font-family: "Press Start 2P";
+	font-size: 25px;
+	top: 50px;
+	left: 9px;
 }
