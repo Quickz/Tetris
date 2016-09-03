@@ -7,12 +7,16 @@ x - future space
 */
 
 var map = $("#map")[0].getContext("2d");
-// setting font for pause/game over text
-map.font = "23px Calibri";
+
 //var ctx = mainWindow.getContext("2d");
 
 function Game()
 {
+	// Cleans the game map
+	map.clearRect(0,0,170,340);
+	// Setting cursor to default
+	$("#map").css({cursor: "default"});
+
 	var startSpeed = 750;
 	var gameSpeed = startSpeed + 7.5;
 	this.over = false;
@@ -112,9 +116,8 @@ function Game()
 				{
 					this.over = true;
 					
-					// Drawing text
-					map.fillStyle = "black";
-					map.fillText("Game Over!",30,170);
+					// Displaying game over notification
+					mapFillTxt(30,170,"Game Over!","23px Calibri");
 
 					return;
 				}
@@ -401,9 +404,10 @@ function Game()
 
 			// Clears the game map from its contents
 			map.clearRect(0,0,170,340);
-			// Drawing text
-			map.fillStyle = "black";
-			map.fillText("Game Paused!",18,170);
+
+			// Displaying game pause notification
+			mapFillTxt(18,170,"Game Paused!","23px Calibri");
+
 			// Hides upcoming figures
 			nextUps.forEach(x => x.clearRect(0,0,85,85));
 		}
@@ -497,12 +501,151 @@ function Timer(callback, delay)
     this.resume();
 }
 
+function Menu()
+{
+	// Cleans the game map
+	map.clearRect(0,0,170,340);
+
+	mapFillTxt(51,125,"Start", "35px Calibri");
+	mapFillTxt(26,175,"Controls", "35px Calibri");
+
+	this.active = "start";
+
+	this.checkPos = function(e)
+	{
+		var tmp = this.getMousePos(e);
+
+		// start position
+		if (this.isInPos(tmp,45,125,98,138))
+		{
+			$("#map").css({cursor: "pointer"});
+			if (this.active == "controls")
+				this.activateStart();
+		}
+		// controls position
+		else if (this.isInPos(tmp,21,150,147,188))
+		{
+			$("#map").css({cursor: "pointer"});
+			if (this.active == "start")
+				this.activateControls();
+		}
+		else
+			$("#map").css({cursor: "default"});
+	};
+	this.isInPos = function(coordinates, x1, x2, y1, y2)
+	{
+		return coordinates.x > x1 && coordinates.x < x2 && coordinates.y > y1 && coordinates.y < y2;
+	}
+	this.getMousePos = function(e)
+	{
+		// contains relative position and size
+    	var rect = e.target.getBoundingClientRect();
+    	// returns mouse x and y coordinates inside the canvas element
+    	return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+	};
+	this.strokeLine = function(startX, startY, endX, endY)
+	{
+		map.strokeStyle = "black";
+		map.beginPath();
+		map.moveTo(startX,startY);
+		map.lineTo(endX,endY);
+		map.stroke();
+	};
+	this.clearLine = function(startX, startY, endX, endY = 5)
+	{
+		map.clearRect(startX,startY - 2,endX - startX,endY);
+	};
+	this.activateStart = function()
+	{
+		this.active = "start";
+		this.clearLine(25,185,146);
+		this.strokeLine(45,135,126,135);
+	};
+	this.activateControls = function()
+	{
+		this.active = "controls";
+		this.clearLine(45,135,126);
+		this.strokeLine(25,185,146,185);
+	};
+
+	this.activateStart();
+
+}
+// Fill text function for game map
+function mapFillTxt(x, y, text, font, color = "black")
+{
+	map.fillStyle = color;
+	map.font = font;
+	map.fillText(text, x, y);
+}
+$("#map").mousemove(function(e) {
+	if (typeof menu != "undefined")
+		menu.checkPos(e);
+});
+$("#map").mouseup(function(e) {
+	if (typeof menu != "undefined")
+	{
+		var tmp = menu.getMousePos(e);
+		//start
+		if (menu.isInPos(tmp,45,125,98,138))
+		{
+			menu = undefined;
+			game = new Game();
+		}
+	}
+});
+
+// Prevents default action of buttons that may scroll the page unnecessarily
+function prevDefault(e)
+{
+	switch (e.keyCode)
+	{
+		case 32:
+		case 37:
+		case 38:
+		case 39:
+		case 40:
+			e.preventDefault()
+			break;
+	}
+}
+
 // Controls
 function anim(e)
 {
+	prevDefault(e);
+
+	// Menu Controls
+	if (typeof game == "undefined")
+	{
+		switch (e.keyCode)
+		{
+			// Up
+			case 38:
+			// Down
+			case 40:
+				if (menu.active == "start")
+					menu.activateControls();
+				else
+					menu.activateStart();
+				break;
+			// Space
+			case 32:
+			// Enter
+			case 13:
+				if (menu.active == "start")
+				{
+					menu = undefined;
+					game = new Game();
+				}
+				break;
+		}
+		return;
+	}
+
 	// Using prevent default to prevent accidently scrolling page when browser
 	// is resized to a smaller size
-	switch(e.keyCode)
+	switch (e.keyCode)
 	{
 		// R - restarts the game
 		case 82:
@@ -510,31 +653,26 @@ function anim(e)
 			break;
 		// Up
 		case 38:
-			e.preventDefault();
 			if (!game.over && !game.paused)
 				game.turnFigure();
 			break;
 		// Down
 		case 40:
-			e.preventDefault();
 			if (!game.over && !game.paused)
 				game.speedUp();
 			break;
 		// Left
 		case 37:
-			e.preventDefault();
 			if (!game.over && !game.paused)
 				game.moveLeft();
 			break;
 		// Right
 		case 39:
-			e.preventDefault();
 			if (!game.over && !game.paused)
 				game.moveRight();
 			break;
 		// Space
 		case 32:
-			e.preventDefault();
 			if (!game.over && !game.paused)
 			{
 				game.spacePressed = true;
@@ -551,8 +689,9 @@ function anim(e)
 	}
 }
 
-
-var game = new Game();
+var game;
+var menu = new Menu();
+//var game = new Game();
 
 document.onkeydown = anim;
 
