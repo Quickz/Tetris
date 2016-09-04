@@ -84,6 +84,21 @@
 #info:focus {
 	background: #3792fb;
 }
+#notification, #notification2 {
+	position: absolute;
+	width: 172px;
+	font-family: "Press Start 2P";
+	text-align: center;
+}
+#notification {
+	top: 150px;
+	font-size: 13px;
+}
+#notification2 {
+	top: 175px;
+	font-size: 7px;
+}
+
 
 
 

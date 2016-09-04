@@ -7,6 +7,8 @@ x - future space
 */
 
 var map = $("#map")[0].getContext("2d");
+$("#notification").hide();
+$("#notification2").hide();
 
 //var ctx = mainWindow.getContext("2d");
 
@@ -117,7 +119,9 @@ function Game()
 					this.over = true;
 					
 					// Displaying game over notification
-					mapFillTxt(30,170,"Game Over!","23px Calibri");
+					$("#notification").text("Game Over!");
+					$("#notification").show();
+					$("#notification2").show();
 
 					return;
 				}
@@ -388,8 +392,9 @@ function Game()
 			speedTimeout.resume();
 			timerTimeout.resume();
 
-			// Clears the game map from its contents
-			map.clearRect(0,0,170,340);
+			// Hides pause notification
+			$("#notification").hide();
+
 			// Redraws the game map contents
 			this.draw();
 			// Redisplays hidden upcoming figures
@@ -406,7 +411,8 @@ function Game()
 			map.clearRect(0,0,170,340);
 
 			// Displaying game pause notification
-			mapFillTxt(18,170,"Game Paused!","23px Calibri");
+			$("#notification").text("Game Paused!");
+			$("#notification").show();
 
 			// Hides upcoming figures
 			nextUps.forEach(x => x.clearRect(0,0,85,85));
@@ -470,6 +476,9 @@ function Game()
 
 		// Clears the game map from its contents
 		map.clearRect(0,0,170,340);
+		// Hides game over notification
+		$("#notification").hide();
+		$("#notification2").hide();
 
 		return new Game();
 	};
@@ -499,14 +508,6 @@ function Timer(callback, delay)
     };
 
     this.resume();
-}
-
-// Fill text function for game map
-function mapFillTxt(x, y, text, font, color = "black")
-{
-	map.fillStyle = color;
-	map.font = font;
-	map.fillText(text, x, y);
 }
 
 // Prevents default action of buttons that may scroll the page unnecessarily
