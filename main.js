@@ -541,12 +541,6 @@ function anim(e)
 				$((startFocused ? "#info" : "#start")).focus();
 				startFocused = !startFocused;
 				break;
-			// Space
-			case 32:
-
-				break;
-			// Enter
-			//case 13:
 		}	
 		return;
 	}
@@ -602,6 +596,14 @@ $("#start").on("click", function() {
 	$("#start").hide();
 	$("#info").hide();
 	game = new Game();
+});
+$("#start").hover(function() {
+	$("#start").focus();
+	startFocused = true;
+});
+$("#info").hover(function() {
+	$("#info").focus();
+	startFocused = false;
 });
 
 var startFocused = true;
