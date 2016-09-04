@@ -1,5 +1,11 @@
 @import "https://fonts.googleapis.com/css?family=Press+Start+2P";
 
+/* Disabled Scrolling */
+html, body {
+	margin: 0; height: 100%;
+	overflow: hidden
+}
+
 #container {
 	margin: 30px auto auto auto;
 	width: 500px;

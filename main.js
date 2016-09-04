@@ -522,7 +522,6 @@ function prevDefault(e)
 {
 	switch (e.keyCode)
 	{
-		case 32:
 		case 37:
 		case 38:
 		case 39:
