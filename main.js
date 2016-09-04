@@ -125,6 +125,7 @@ function Game()
 					
 					// Displaying game over notification
 					$("#notification").text("Game Over!");
+					$("#notification").css({"font-size": "16px"});
 					$("#notification").show();
 					$("#notification2").show();
 
@@ -417,6 +418,7 @@ function Game()
 
 			// Displaying game pause notification
 			$("#notification").text("Game Paused!");
+			$("#notification").css({"font-size": "13px"});
 			$("#notification").show();
 
 			// Hides upcoming figures

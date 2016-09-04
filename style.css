@@ -1,9 +1,9 @@
 @import "https://fonts.googleapis.com/css?family=Press+Start+2P";
 
 #container {
-	margin: auto;
+	margin: 30px auto auto auto;
 	width: 500px;
-	height: 400px;
+	height: 390px;
 	border: solid #e3e3e3 1px;
 }
 #game {
@@ -38,7 +38,7 @@
 	width: 125px;
 	height: 307px;
 	float: right;
-	bottom: 320px;
+	bottom: 349px;
 	right: 17px;
 	border: solid #e3e3e3 1px;
 }
@@ -118,11 +118,11 @@
 }
 #notification {
 	top: 150px;
-	font-size: 13px;
+	font-size: 14px;
 }
 #notification2 {
-	top: 175px;
-	font-size: 7px;
+	top: 177px;
+	font-size: 9px;
 }
 #yes-btn, #no-btn {
 	position: absolute;
