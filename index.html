@@ -8,16 +8,28 @@
 <body>
 	<div id="container">
 		<div id="left-ui">
-			<span id="score">Score: 0</span> <br>
-			<span id="speed">Speed: 100%</span>
-			<span id="time">Time: 00:00:00</span>
+			<span id="score" hidden>Score: 0</span> <br>
+			<span id="speed" hidden>Speed: 100%</span>
+			<span id="time" hidden>Time: 00:00:00</span>
 		</div>
 		<div id="game">
-			<span id="title">Tetris</span>
+			<div id="title">Tetris</div>
+			<div id="title2" hidden>Controls</div>
+			<div id="controls" hidden>
+				<p>Up: rotate</p>
+				<p>Right: move right</p>
+				<p>Left: move left</p>
+				<p>Down: move down</p>
+				<p>Space: drop figure</p>
+				<p>R: restart</p>
+				<p>P: pause</p>
+				<p>Esc - return/pause</p>
+			</div>
 			<button id="start" autofocus>Start</button>
 			<button id="info">Info</button>
-			<div id="notification">Game Over!</div>
-			<div id="notification2">Press [R] to try again</div>
+			<button id="back" hidden>Back</button>
+			<div id="notification" hidden>Game Over!</div>
+			<div id="notification2" hidden>Press [R] to try again</div>
 			<canvas width="170" height="340" id="map"></canvas>
 		</div>
 		<div id="right-ui">

@@ -7,11 +7,7 @@ x - future space
 */
 
 var map = $("#map")[0].getContext("2d");
-$("#notification").hide();
-$("#notification2").hide();
-$("#score").hide();
-$("#speed").hide();
-$("#time").hide();
+
 // Using fade to avoid other elements from moving
 $("#next-txt").fadeTo(0, 0);
 
@@ -541,7 +537,7 @@ function anim(e)
 	prevDefault(e);
 
 	// Menu Controls
-	if (typeof game == "undefined")
+	if (activePage == "menu")
 	{
 		switch (e.keyCode)
 		{
@@ -553,6 +549,12 @@ function anim(e)
 				startFocused = !startFocused;
 				break;
 		}	
+		return;
+	}
+	if (activePage == "info")
+	{
+		if (e.keyCode == 27)
+			$("#back").click();
 		return;
 	}
 
@@ -606,16 +608,40 @@ $("#start").on("click", function() {
 	$("#title").hide();
 	$("#start").hide();
 	$("#info").hide();
+	activePage = "game";
 	game = new Game();
 });
 $("#start").hover(function() {
 	$("#start").focus();
 	startFocused = true;
 });
+$("#info").on("click", function() {
+	activePage = "info";
+	$("#title").hide();
+	$("#start").hide();
+	$("#info").hide();
+	$("#title2").show();
+	$("#back").show();
+	$("#controls").show();
+	$("#back").focus();
+
+});
 $("#info").hover(function() {
 	$("#info").focus();
 	startFocused = false;
 });
+$("#back").on("click", function() {
+	activePage = "menu";
+	$("#title2").hide();
+	$("#back").hide();
+	$("#controls").hide();
+	$("#title").show();
+	$("#start").show();
+	$("#info").show();
+	$("#info").focus();
+});
+
+var activePage = "menu";
 
 var startFocused = true;
 
