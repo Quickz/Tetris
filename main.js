@@ -11,7 +11,9 @@ var map = $("#map")[0].getContext("2d");
 // Using fade to avoid other elements from moving
 $("#next-txt").fadeTo(0, 0);
 
-//var ctx = mainWindow.getContext("2d");
+// Canva objects for the next up figures
+var nextUps = [ $("#next3")[0], $("#next2")[0], $("#next1")[0] ];
+nextUps = nextUps.map(x => x.getContext("2d"));
 
 function Game()
 {
@@ -22,12 +24,13 @@ function Game()
 
 	// Cleans the game map
 	map.clearRect(0,0,170,340);
-	// Setting cursor to default
-	$("#map").css({cursor: "default"});
 
 	var startSpeed = 750;
 	var gameSpeed = startSpeed + 7.5;
 	this.over = false;
+
+	// Tells you whether there's a warning up - "are you sure"
+	this.warned = "none";
 
 	this.paused = false;
 	// Coordinates of current figure squares
@@ -53,10 +56,6 @@ function Game()
 	[[5,-1],[6,-1],[4,-2],[4,-1]], [[5,-1],[6,-1],[6,-2],[4,-1]] ];
 	// Contains figure colors
 	var colors = ["#2E9E11", "#008ae6", "#3385ff", "orange", "#ff4000", "#ff0080", "#b35900", "white", "gray"];
-
-	// Canba objects for the next up figures
-	var nextUps = [ $("#next3")[0], $("#next2")[0], $("#next1")[0] ];
-	nextUps = nextUps.map(x => x.getContext("2d"));
 
 	// Contains upcoming choices
 	var choices = [Math.floor(Math.random() * 7), Math.floor(Math.random() * 7), 
@@ -474,7 +473,7 @@ function Game()
 		timerTimeout = new Timer(tmp, 1000);
 	};
 	// Stops the game and returns a new one
-	this.restart = function()
+	this.restart = function(returnNewOne = true)
 	{
 		currTimeOut.pause();
 		speedTimeout.pause();
@@ -486,7 +485,7 @@ function Game()
 		$("#notification").hide();
 		$("#notification2").hide();
 
-		return new Game();
+		return returnNewOne ? new Game() : undefined;
 	};
 	// Creating a new figure
 	this.genFigure();
@@ -564,7 +563,31 @@ function anim(e)
 	{
 		// R - restarts the game
 		case 82:
-			game = game.restart();
+			if (game.warned == "restart")
+				break;
+			if (!game.over)
+			{
+				game.warned = "restart";
+				showWarning("Are you sure you want to restart?");
+				if (!game.paused)
+					game.pause();
+			}
+			else
+				game = game.restart();
+			break;
+		// Esc
+		case 27:
+			if (game.warned == "return")
+				break;
+			if (!game.over)
+			{
+				game.warned = "return";
+				showWarning("Are you sure you want to return to main menu?");
+				if (!game.paused)
+					game.pause();
+			}
+			else
+				mainMenu();
 			break;
 		// Up
 		case 38:
@@ -580,11 +603,22 @@ function anim(e)
 		case 37:
 			if (!game.over && !game.paused)
 				game.moveLeft();
+			else
+			{
+				yesFocused = !yesFocused;
+				$((yesFocused ? "#yes-btn" : "#no-btn")).focus();
+			}
+				
 			break;
 		// Right
 		case 39:
 			if (!game.over && !game.paused)
 				game.moveRight();
+			else
+			{
+				yesFocused = !yesFocused;
+				$((yesFocused ? "#yes-btn" : "#no-btn")).focus();
+			}
 			break;
 		// Space
 		case 32:
@@ -598,16 +632,68 @@ function anim(e)
 		case 80:
 			if (!game.over)
 			{
+				if (game.warned != "none")
+				{
+					game.warned = "none";
+					hideWarning();
+				}
 				game.pause();
 			}
 			break;
 	}
 }
 
-$("#start").on("click", function() {
+// Returns you to main menu
+function mainMenu()
+{
+	game = game.restart(false);
+	activePage = "menu";
+	// Hides upcoming figures portion
+	nextUps.forEach(x => x.clearRect(0,0,85,85));
+	$("#next-txt").fadeTo(0, 0);
+
+	$("#score").hide();
+	$("#speed").hide();
+	$("#time").hide();
+
+	showMainMenu();
+	$("#start").focus();
+
+}
+
+function showWarning(txt)
+{
+	$("#warning").text(txt);
+	$("#warning").show();
+	$("#yes-btn").show();
+	$("#no-btn").show();
+	$("#no-btn").focus();
+}
+
+function hideWarning()
+{
+	$("#warning").hide();
+	$("#yes-btn").hide();
+	$("#no-btn").hide();
+}
+
+function showMainMenu()
+{
+	$("#title").show();
+	$("#start").show();
+	$("#info").show();
+}
+
+function hideMainMenu()
+{
 	$("#title").hide();
 	$("#start").hide();
 	$("#info").hide();
+}
+
+// Main Menu
+$("#start").on("click", function() {
+	hideMainMenu();
 	activePage = "game";
 	game = new Game();
 });
@@ -617,33 +703,54 @@ $("#start").hover(function() {
 });
 $("#info").on("click", function() {
 	activePage = "info";
-	$("#title").hide();
-	$("#start").hide();
-	$("#info").hide();
+	hideMainMenu();
+
 	$("#title2").show();
 	$("#back").show();
 	$("#controls").show();
-	$("#back").focus();
 
+	$("#back").focus();
 });
 $("#info").hover(function() {
 	$("#info").focus();
 	startFocused = false;
 });
+
+// Controls portion
 $("#back").on("click", function() {
 	activePage = "menu";
+
 	$("#title2").hide();
 	$("#back").hide();
 	$("#controls").hide();
-	$("#title").show();
-	$("#start").show();
-	$("#info").show();
+
+	showMainMenu();
 	$("#info").focus();
 });
+
+// Warning Portion
+$("#yes-btn").on("click", function() {
+	hideWarning();
+	yesFocused = false;
+	if (game.warned == "return")
+		mainMenu();
+	else
+		game = game.restart();
+});
+$("#no-btn").on("click", function() {
+	game.warned = "none";
+	hideWarning();
+	yesFocused = false;
+	game.pause();
+});
+
+
 
 var activePage = "menu";
 
 var startFocused = true;
+
+var yesFocused = false;
 
 var game;
 

@@ -124,8 +124,39 @@
 	top: 175px;
 	font-size: 7px;
 }
-
-
+#yes-btn, #no-btn {
+	position: absolute;
+	margin-top: 250px;
+	color: #f1f1f1;
+	width: 43px;
+	height: 17px;
+	font-family: "Press Start 2P";
+	font-size: 10px;
+	padding: 0;
+	border: none;
+}
+#yes-btn {
+	left: 33px;
+	background: #039620;
+}
+#no-btn {
+	right: 33px;
+	background: #fa4a1e;
+}
+#yes-btn:focus {
+	background: #04bb28;
+}
+#no-btn:focus {
+	background: #fb7250;
+}
+#warning {
+	position: absolute;
+	width: 172px;
+	margin-top: 215px;
+	text-align: center;
+	font-family: "Press Start 2P";
+	font-size: 9px;
+}
 
 
 
