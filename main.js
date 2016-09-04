@@ -501,76 +501,6 @@ function Timer(callback, delay)
     this.resume();
 }
 
-function Menu()
-{
-	// Cleans the game map
-	map.clearRect(0,0,170,340);
-
-	mapFillTxt(51,125,"Start", "35px Calibri");
-	mapFillTxt(26,175,"Controls", "35px Calibri");
-
-	this.active = "start";
-
-	this.checkPos = function(e)
-	{
-		var tmp = this.getMousePos(e);
-
-		// start position
-		if (this.isInPos(tmp,45,125,98,138))
-		{
-			$("#map").css({cursor: "pointer"});
-			if (this.active == "controls")
-				this.activateStart();
-		}
-		// controls position
-		else if (this.isInPos(tmp,21,150,147,188))
-		{
-			$("#map").css({cursor: "pointer"});
-			if (this.active == "start")
-				this.activateControls();
-		}
-		else
-			$("#map").css({cursor: "default"});
-	};
-	this.isInPos = function(coordinates, x1, x2, y1, y2)
-	{
-		return coordinates.x > x1 && coordinates.x < x2 && coordinates.y > y1 && coordinates.y < y2;
-	}
-	this.getMousePos = function(e)
-	{
-		// contains relative position and size
-    	var rect = e.target.getBoundingClientRect();
-    	// returns mouse x and y coordinates inside the canvas element
-    	return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-	};
-	this.strokeLine = function(startX, startY, endX, endY)
-	{
-		map.strokeStyle = "black";
-		map.beginPath();
-		map.moveTo(startX,startY);
-		map.lineTo(endX,endY);
-		map.stroke();
-	};
-	this.clearLine = function(startX, startY, endX, endY = 5)
-	{
-		map.clearRect(startX,startY - 2,endX - startX,endY);
-	};
-	this.activateStart = function()
-	{
-		this.active = "start";
-		this.clearLine(25,185,146);
-		this.strokeLine(45,135,126,135);
-	};
-	this.activateControls = function()
-	{
-		this.active = "controls";
-		this.clearLine(45,135,126);
-		this.strokeLine(25,185,146,185);
-	};
-
-	this.activateStart();
-
-}
 // Fill text function for game map
 function mapFillTxt(x, y, text, font, color = "black")
 {
@@ -578,23 +508,6 @@ function mapFillTxt(x, y, text, font, color = "black")
 	map.font = font;
 	map.fillText(text, x, y);
 }
-$("#map").mousemove(function(e) {
-	if (typeof menu != "undefined")
-		menu.checkPos(e);
-});
-$("#map").mouseup(function(e) {
-	if (typeof menu != "undefined")
-	{
-		var tmp = menu.getMousePos(e);
-		//start
-		if (menu.isInPos(tmp,45,125,98,138))
-		{
-			menu = undefined;
-			$("#title").hide();
-			game = new Game();
-		}
-	}
-});
 
 // Prevents default action of buttons that may scroll the page unnecessarily
 function prevDefault(e)
@@ -619,29 +532,21 @@ function anim(e)
 	// Menu Controls
 	if (typeof game == "undefined")
 	{
-		switch (e.keyCode)
+		/*switch (e.keyCode)
 		{
 			// Up
 			case 38:
 			// Down
 			case 40:
-				if (menu.active == "start")
-					menu.activateControls();
-				else
-					menu.activateStart();
+
 				break;
 			// Space
 			case 32:
-			// Enter
-			case 13:
-				if (menu.active == "start")
-				{
-					menu = undefined;
-					$("#title").hide();
-					game = new Game();
-				}
+
 				break;
-		}
+			// Enter
+			//case 13:
+		}	*/
 		return;
 	}
 
@@ -691,8 +596,15 @@ function anim(e)
 	}
 }
 
+$("#start").on("click", function() {
+	$("#title").hide();
+	$("#start").hide();
+	$("#info").hide();
+	game = new Game();
+});
+
 var game;
-var menu = new Menu();
+//var menu = new Menu();
 //var game = new Game();
 
 document.onkeydown = anim;

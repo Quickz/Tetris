@@ -32,9 +32,6 @@
 	font-family: calibri;
 	font-size: 17px;
 }
-#speed {
-	
-}
 #right-ui {
 	position: relative;
 	width: 125px;
@@ -61,3 +58,35 @@
 	top: 50px;
 	left: 9px;
 }
+#start, #info {
+	position: absolute;
+	padding: 0;
+	width: 125px;
+	height: 37px;
+	font-family: "Press Start 2P";
+	font-size: 20px;
+	color: #f1f1f1;
+	
+	border: solid #c3c3c3 1px;
+	border-radius: 0px;
+}
+#start {
+	background: #039620;
+	margin: 100px 23px 0px 23px;
+}
+#info {
+	background: #0577fa;
+	margin: 143px 23px 0px 23px;
+}
+#start:hover {
+	background: #04bb28;
+}
+#info:hover {
+	background: #3792fb;
+}
+
+
+
+
+
+
