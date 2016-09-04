@@ -23,6 +23,7 @@
 #left-ui {
 	float: left;
 	width: 135px;
+	height: 66px;
 	border: solid #e3e3e3 1px;
 	margin: 7px 0px 0px 7px;
 	padding: 4px 0px 4px 0px;
@@ -37,14 +38,15 @@
 	width: 125px;
 	height: 307px;
 	float: right;
-	bottom: 315px;
+	bottom: 320px;
 	right: 17px;
 	border: solid #e3e3e3 1px;
 }
 #next-txt {
 	display: block;
-	font-family: calibri;
-	margin-left: 19px;
+	font-family: "Press Start 2P";
+	font-size: 13px;
+	margin: 5px 0px 5px 19px;
 }
 #next1, #next2, #next3 {
 	position: relative;

@@ -9,11 +9,21 @@ x - future space
 var map = $("#map")[0].getContext("2d");
 $("#notification").hide();
 $("#notification2").hide();
+$("#score").hide();
+$("#speed").hide();
+$("#time").hide();
+// Using fade to avoid other elements from moving
+$("#next-txt").fadeTo(0, 0);
 
 //var ctx = mainWindow.getContext("2d");
 
 function Game()
 {
+	$("#score").show();
+	$("#speed").show();
+	$("#time").show();
+	$("#next-txt").fadeTo(0, 1);
+
 	// Cleans the game map
 	map.clearRect(0,0,170,340);
 	// Setting cursor to default
