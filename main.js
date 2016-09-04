@@ -532,13 +532,14 @@ function anim(e)
 	// Menu Controls
 	if (typeof game == "undefined")
 	{
-		/*switch (e.keyCode)
+		switch (e.keyCode)
 		{
 			// Up
 			case 38:
 			// Down
 			case 40:
-
+				$((startFocused ? "#info" : "#start")).focus();
+				startFocused = !startFocused;
 				break;
 			// Space
 			case 32:
@@ -546,7 +547,7 @@ function anim(e)
 				break;
 			// Enter
 			//case 13:
-		}	*/
+		}	
 		return;
 	}
 
@@ -603,9 +604,9 @@ $("#start").on("click", function() {
 	game = new Game();
 });
 
+var startFocused = true;
+
 var game;
-//var menu = new Menu();
-//var game = new Game();
 
 document.onkeydown = anim;
 

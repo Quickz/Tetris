@@ -78,10 +78,10 @@
 	background: #0577fa;
 	margin: 143px 23px 0px 23px;
 }
-#start:hover {
+#start:focus {
 	background: #04bb28;
 }
-#info:hover {
+#info:focus {
 	background: #3792fb;
 }
 
