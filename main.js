@@ -129,6 +129,8 @@ function Game()
 					$("#notification").show();
 					$("#notification2").show();
 
+					addScore(score);
+
 					return;
 				}
 
@@ -543,15 +545,18 @@ function anim(e)
 		{
 			// Up
 			case 38:
+				mainFocus += mainFocus < 1 ? 2 : -1;
+				focusCurr();
+				break;
 			// Down
 			case 40:
-				$((startFocused ? "#info" : "#start")).focus();
-				startFocused = !startFocused;
+				mainFocus += mainFocus > 1 ? -2 : 1;
+				focusCurr();
 				break;
 		}	
 		return;
 	}
-	if (activePage == "info")
+	if (activePage == "info" || activePage == "scores")
 	{
 		if (e.keyCode == 27)
 			$("#back").click();
@@ -644,6 +649,41 @@ function anim(e)
 	}
 }
 
+// Focuses selected button in main menu
+function focusCurr()
+{
+	switch (mainFocus)
+	{
+		case 0:
+			$("#start").focus();
+			break;
+		case 1:
+			$("#scores-btn").focus();
+			break;
+		case 2:
+			$("#info").focus();
+			break;
+	}
+}
+
+function fillScores()
+{
+	for (let i = 0; i < 10; i++)
+		$("#li" + i).text(scores[i]);
+}
+
+function addScore(score)
+{
+	scores.push(score);
+	scores.sort((a, b) => b - a);
+	scores.pop();
+
+	for (let i = 0; i < 10; i++)
+		document.cookie = i + "=" + scores[i] + "; expires=Thy, 01 Jan 2222 00:00:00 UTC";
+	
+	fillScores();
+}
+
 // Returns you to main menu
 function mainMenu()
 {
@@ -683,6 +723,7 @@ function showMainMenu()
 {
 	$("#title").show();
 	$("#start").show();
+	$("#scores-btn").show();
 	$("#info").show();
 }
 
@@ -690,6 +731,7 @@ function hideMainMenu()
 {
 	$("#title").hide();
 	$("#start").hide();
+	$("#scores-btn").hide();
 	$("#info").hide();
 }
 
@@ -701,26 +743,47 @@ $("#start").on("click", function() {
 });
 $("#start").hover(function() {
 	$("#start").focus();
-	startFocused = true;
+	mainFocus = 0;
 });
+
+$("#scores-btn").hover(function() {
+	$("#scores-btn").focus();
+	mainFocus = 1;
+});
+$("#scores-btn").on("click", function() {
+	activePage = "scores";
+	hideMainMenu();
+
+	$("#title2").text("Scores");
+	$("#title2").show();
+	
+	$("#score-list").show();
+	$("#back").show();
+	$("#back").focus();
+});
+
 $("#info").on("click", function() {
 	activePage = "info";
 	hideMainMenu();
 
 	$("#title2").show();
 	$("#back").show();
+
+	$("#title2").text("Controls");
 	$("#controls").show();
 
 	$("#back").focus();
 });
 $("#info").hover(function() {
 	$("#info").focus();
-	startFocused = false;
+	mainFocus = 2;
 });
 
 // Controls portion
 $("#back").on("click", function() {
 	activePage = "menu";
+
+	$("#score-list").hide();
 
 	$("#title2").hide();
 	$("#back").hide();
@@ -747,10 +810,24 @@ $("#no-btn").on("click", function() {
 });
 
 
+var scores;
+if (document.cookie.length == 0)
+{
+	scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+}
+else
+{
+	// Converting all of our cookies into an array of scores
+	scores = document.cookie.split("; ").map(x => x.substring(2));
+}
+// Contains the scores
+
+fillScores();
 
 var activePage = "menu";
 
-var startFocused = true;
+// 0 - start, 1 - scores, 2 - info
+var mainFocus = 0;
 
 var yesFocused = false;
 

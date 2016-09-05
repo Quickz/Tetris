@@ -66,42 +66,56 @@ html, body {
 	width: 172px;
 	text-align: center;
 }
-#title {
-	font-size: 25px;
-}
-#title2 {
-	font-size: 17px;
-}
-#controls {
+
+#title { font-size: 25px; }
+#title2 { font-size: 17px; }
+
+#controls, #score-list {
 	position: absolute;
-	text-align: center;
-	margin-top: 85px;
 	font-family: "Press Start 2P";
-	font-size: 9px;
 	width: 172px;
 }
-#start, #info, #back {
+#controls {
+	margin-top: 85px;
+	text-align: center;
+	font-size: 9px;
+}
+#score-list {
+	margin-top: 80px;
+	font-size: 12px;
+}
+
+ol { margin-left: 20px; }
+li { margin: 1px 0px 1px 0px; }
+
+#start, #info, #back, #scores-btn {
 	position: absolute;
 	padding: 0;
 	width: 125px;
 	height: 37px;
 	font-family: "Press Start 2P";
-	font-size: 20px;
 	color: #f1f1f1;
 	
 	border: solid #c3c3c3 1px;
-	border-radius: 0px;
 }
 
 #start {
+	font-size: 18px;
 	background: #039620;
 	margin: 100px 23px 0px 23px;
 }
 #info {
+	font-size: 17px;
 	background: #0577fa;
+	margin: 186px 23px 0px 23px;
+}
+#scores-btn {
+	font-size: 17px;
+	background: #fa4a1e;
 	margin: 143px 23px 0px 23px;
 }
 #back {
+	font-size: 17px;
 	background: #fa4a1e;
 	margin: 272px 23px 0px 23px;
 }
@@ -111,6 +125,9 @@ html, body {
 }
 #info:focus {
 	background: #3792fb;
+}
+#scores-btn:focus {
+	background: #fb8350;
 }
 #back:hover {
 	background: #fb7250;
