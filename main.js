@@ -664,6 +664,7 @@ function mainMenu()
 
 function showWarning(txt)
 {
+	yesFocused = false;
 	$("#warning").text(txt);
 	$("#warning").show();
 	$("#yes-btn").show();
