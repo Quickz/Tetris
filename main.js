@@ -678,8 +678,7 @@ function addScore(score)
 	scores.sort((a, b) => b - a);
 	scores.pop();
 
-	for (let i = 0; i < 10; i++)
-		document.cookie = i + "=" + scores[i] + "; expires=Thy, 01 Jan 2222 00:00:00 UTC";
+	localStorage.scores = JSON.stringify(scores);
 	
 	fillScores();
 }
@@ -808,17 +807,15 @@ $("#no-btn").on("click", function() {
 	yesFocused = false;
 	game.pause();
 });
-
-
 var scores;
-if (document.cookie.length == 0)
+if (localStorage.length < 1)
 {
 	scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 }
 else
 {
-	// Converting all of our cookies into an array of scores
-	scores = document.cookie.split("; ").map(x => x.substring(2));
+	// Converting localstorage score contents into an array and storing it in variable
+	scores = JSON.parse(localStorage.scores);
 }
 // Contains the scores
 
@@ -834,10 +831,6 @@ var yesFocused = false;
 var game;
 
 document.onkeydown = anim;
-
-
-
-
 
 
 
