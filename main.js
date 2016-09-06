@@ -780,8 +780,6 @@ $("#info").hover(function() {
 
 // Controls portion
 $("#back").on("click", function() {
-	activePage = "menu";
-
 	$("#score-list").hide();
 
 	$("#title2").hide();
@@ -789,7 +787,9 @@ $("#back").on("click", function() {
 	$("#controls").hide();
 
 	showMainMenu();
-	$("#info").focus();
+	$(activePage == "scores" ? "#scores-btn" : "#info").focus();
+
+	activePage = "menu";
 });
 
 // Warning Portion
