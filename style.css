@@ -81,14 +81,14 @@ html, body {
 	font-size: 9px;
 }
 #score-list {
-	margin-top: 80px;
+	margin-top: 75px;
 	font-size: 12px;
 }
 
 ol { margin-left: 20px; }
 li { margin: 1px 0px 1px 0px; }
 
-#start, #info, #back, #scores-btn {
+#start, #info, #back, #scores-btn, #reset {
 	position: absolute;
 	padding: 0;
 	width: 125px;
@@ -104,20 +104,24 @@ li { margin: 1px 0px 1px 0px; }
 	background: #039620;
 	margin: 100px 23px 0px 23px;
 }
-#info {
+#info, #scores-btn, #back, #reset {
 	font-size: 17px;
+}
+#info {
 	background: #0577fa;
 	margin: 186px 23px 0px 23px;
 }
 #scores-btn {
-	font-size: 17px;
 	background: #fa4a1e;
 	margin: 143px 23px 0px 23px;
 }
 #back {
-	font-size: 17px;
 	background: #fa4a1e;
 	margin: 272px 23px 0px 23px;
+}
+#reset {
+	background: #fa4a1e;
+	margin: 254px 23px 0px 23px;
 }
 
 #start:focus {
@@ -129,7 +133,7 @@ li { margin: 1px 0px 1px 0px; }
 #scores-btn:focus {
 	background: #fb8350;
 }
-#back:hover {
+#back:focus, #reset:focus {
 	background: #fb7250;
 }
 
@@ -147,9 +151,12 @@ li { margin: 1px 0px 1px 0px; }
 	top: 177px;
 	font-size: 9px;
 }
-#yes-btn, #no-btn {
+#warn-container {
 	position: absolute;
-	margin-top: 250px;
+	margin-top: 185px;
+	width: 172px;
+}
+#yes-btn, #no-btn {
 	color: #f1f1f1;
 	width: 43px;
 	height: 17px;
@@ -159,11 +166,13 @@ li { margin: 1px 0px 1px 0px; }
 	border: none;
 }
 #yes-btn {
-	left: 33px;
+	margin-left: 33px;
+	float: left;
 	background: #039620;
 }
 #no-btn {
-	right: 33px;
+	margin-right: 33px;
+	float: right;
 	background: #fa4a1e;
 }
 #yes-btn:focus {
@@ -173,9 +182,8 @@ li { margin: 1px 0px 1px 0px; }
 	background: #fb7250;
 }
 #warning {
-	position: absolute;
 	width: 172px;
-	margin-top: 215px;
+	margin: 0px 0px 5px 0px;
 	text-align: center;
 	font-family: "Press Start 2P";
 	font-size: 9px;

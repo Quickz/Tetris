@@ -42,11 +42,14 @@
 			<button id="start" autofocus>Start</button>
 			<button id="scores-btn">Scores</button>
 			<button id="info">Info</button>
+			<button id="reset" hidden>Reset</button>
 			<button id="back" hidden>Back</button>
 			<div id="notification" hidden>Game Over!</div>
 			<div id="notification2" hidden>Press [R] to<br>try again</div>
-			<div id="warning" hidden>Are you sure you want to restart?</div>
-			<button id="yes-btn" hidden>Yes</button><button id="no-btn" hidden>No</button>
+			<div id="warn-container">
+				<div id="warning" hidden>Are you sure you want to restart?</div>
+				<button id="yes-btn" hidden>Yes</button><button id="no-btn" hidden>No</button>
+			</div>
 			<canvas width="170" height="340" id="map"></canvas>
 		</div>
 		<div id="right-ui">

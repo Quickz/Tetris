@@ -536,6 +536,13 @@ function prevDefault(e)
 // Controls
 function anim(e)
 {
+	// Left				  Right
+	if (e.keyCode == 37 || e.keyCode == 39)
+	{
+		yesFocused = !yesFocused;
+		$((yesFocused ? "#yes-btn" : "#no-btn")).focus();
+	}
+
 	prevDefault(e);
 
 	// Menu Controls
@@ -556,10 +563,30 @@ function anim(e)
 		}	
 		return;
 	}
-	if (activePage == "info" || activePage == "scores")
+	if (activePage != "game")
 	{
-		if (e.keyCode == 27)
-			$("#back").click();
+		switch (e.keyCode)
+		{
+			// Esc
+			case 27:
+				// Closing warning
+				if (resetWarning)
+					$("#no-btn").click();
+				// Returning to main menu
+				else
+				{
+					$("#back").click();
+					resetFocused = false;
+				}
+				break;
+			// Up
+			case 38:
+			// Down
+			case 40:
+				$(resetFocused ? "#back" : "#reset").focus();
+				resetFocused = !resetFocused;
+				break;
+		}
 		return;
 	}
 
@@ -609,22 +636,11 @@ function anim(e)
 		case 37:
 			if (!game.over && !game.paused)
 				game.moveLeft();
-			else
-			{
-				yesFocused = !yesFocused;
-				$((yesFocused ? "#yes-btn" : "#no-btn")).focus();
-			}
-				
 			break;
 		// Right
 		case 39:
 			if (!game.over && !game.paused)
 				game.moveRight();
-			else
-			{
-				yesFocused = !yesFocused;
-				$((yesFocused ? "#yes-btn" : "#no-btn")).focus();
-			}
 			break;
 		// Space
 		case 32:
@@ -713,6 +729,7 @@ function showWarning(txt)
 
 function hideWarning()
 {
+	resetWarning = false;
 	$("#warning").hide();
 	$("#yes-btn").hide();
 	$("#no-btn").hide();
@@ -734,7 +751,17 @@ function hideMainMenu()
 	$("#info").hide();
 }
 
-// Main Menu
+function showScoreContents()
+{
+	$("#score-list").show();
+	$("#reset").show();
+	$("#back").show();
+	$("#reset").focus();
+}
+
+/*
+ * - - - Main Menu - - - 
+*/
 $("#start").on("click", function() {
 	hideMainMenu();
 	activePage = "game";
@@ -755,8 +782,11 @@ $("#scores-btn").on("click", function() {
 
 	$("#title2").text("Scores");
 	$("#title2").show();
-	
+
+	$("#reset").show();
 	$("#score-list").show();
+	
+	$("#back").css({"margin-top": 297});
 	$("#back").show();
 	$("#back").focus();
 });
@@ -766,6 +796,8 @@ $("#info").on("click", function() {
 	hideMainMenu();
 
 	$("#title2").show();
+
+	$("#back").css({"margin-top": 272});
 	$("#back").show();
 
 	$("#title2").text("Controls");
@@ -778,8 +810,10 @@ $("#info").hover(function() {
 	mainFocus = 2;
 });
 
-// Controls portion
+// Controls/Scores portion
 $("#back").on("click", function() {
+
+	$("#reset").hide();
 	$("#score-list").hide();
 
 	$("#title2").hide();
@@ -791,22 +825,64 @@ $("#back").on("click", function() {
 
 	activePage = "menu";
 });
+$("#back").hover(function() {
+	resetFocused = false;
+	$("#back").focus();
+});
+
+// Scores portion
+$("#reset").on("click", function() {
+	$("#score-list").hide();
+	$("#reset").hide();
+	$("#back").hide();
+
+	resetWarning = true;
+	showWarning("Do you wish to reset your progress?");
+});
+$("#reset").hover(function() {
+	resetFocused = true;
+	$("#reset").focus();
+});
 
 // Warning Portion
 $("#yes-btn").on("click", function() {
-	hideWarning();
 	yesFocused = false;
-	if (game.warned == "return")
+
+	if (resetWarning)
+	{
+		localStorage.clear();
+		scores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+		fillScores();
+		showScoreContents();
+	}
+	else if (game.warned == "return")
 		mainMenu();
 	else
 		game = game.restart();
+
+	hideWarning();
+});
+$("#yes-btn").hover(function() {
+	yesFocused = true;
+	$("#yes-btn").focus();
 });
 $("#no-btn").on("click", function() {
-	game.warned = "none";
 	hideWarning();
 	yesFocused = false;
-	game.pause();
+	if (activePage == "game")
+	{
+		game.warned = "none";
+		game.pause();
+	}
+	// Reset
+	else
+		showScoreContents();
 });
+$("#no-btn").hover(function() {
+	yesFocused = false;
+	$("#no-btn").focus();
+});
+
 var scores;
 if (localStorage.length < 1)
 {
@@ -825,7 +901,11 @@ var activePage = "menu";
 
 // 0 - start, 1 - scores, 2 - info
 var mainFocus = 0;
-
+// focus variable for score
+var resetFocused = false;
+// tells you if there's a reset button warning being displayed
+var resetWarning = false;
+// used for the warning
 var yesFocused = false;
 
 var game;
